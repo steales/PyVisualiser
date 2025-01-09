@@ -1,6 +1,6 @@
 # PyVisualiser
 # Author: steales
-# Version: R1
+# Version: 1.1.0
 # License: MIT License
 # Date: 9th Jan 2025
 
@@ -9,15 +9,15 @@ import os
 import numpy as np
 import pyaudio
 import wave
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QVBoxLayout, QWidget
-from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPainter, QColor
 
 class visualiserWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.audio_data = np.zeros(1024)
-        self.setMinimumHeight(200)
+        self.setMinimumSize(400, 300)
 
     def update_audio_data(self, audio_data):
         self.audio_data = audio_data
@@ -57,13 +57,33 @@ class MusicPlayer(QMainWindow):
         self.open_button = QPushButton("Open")
         self.open_button.clicked.connect(self.open_file)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.visualiser)
-        layout.addWidget(self.open_button)
-        layout.addWidget(self.play_button)
+        self.volume_level = QLabel("Volume: 100")
+        self.volume_level.setAlignment(Qt.AlignCenter)
+        self.volume_level.setFixedHeight(30)
+
+        self.volumeslider = QSlider(Qt.Horizontal)
+        self.volumeslider.setRange(0, 100)
+        self.volumeslider.setValue(100)
+        self.volumeslider.setToolTip("Volume")
+        self.volumeslider.valueChanged.connect(self.set_volume)
+
+
+        control_layout = QHBoxLayout()
+        control_layout.addWidget(self.open_button)
+        control_layout.addWidget(self.play_button)
+
+        volume_layout = QVBoxLayout()
+        volume_layout.addWidget(self.volume_level)
+        volume_layout.addWidget(self.volumeslider)
+        volume_layout.setAlignment(Qt.AlignCenter)
+
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(self.visualiser, stretch = 1)
+        main_layout.addLayout(control_layout, stretch = 0)
+        main_layout.addLayout(volume_layout, stretch = 0)
 
         container = QWidget()
-        container.setLayout(layout)
+        container.setLayout(main_layout)
         self.setCentralWidget(container)
 
         self.timer = QTimer()
@@ -71,6 +91,11 @@ class MusicPlayer(QMainWindow):
         self.audio_interface = None
         self.audio_stream = None
         self.stream = None
+        self.volume = 1
+
+    def set_volume(self, value):
+        self.volume = value / 100.0
+        self.volume_level.setText(f"Volume: {value}")
 
     def open_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open Audio File", "", "Audio Files (*.wav)")
@@ -119,8 +144,11 @@ class MusicPlayer(QMainWindow):
             else:
                 normalised_data = audio_array / np.max(np.abs(audio_array))
             
+            scaled_data = (audio_array * self.volume).astype(np.int16)
             self.visualiser.update_audio_data(normalised_data)
-            self.audio_stream.write(data)
+            self.audio_stream.write(scaled_data.tobytes())
+
+
 
     def closeEvent(self, event):
         if self.audio_stream:
@@ -135,3 +163,4 @@ if __name__ == "__main__":
     player = MusicPlayer()
     player.show()
     sys.exit(app.exec_())
+
