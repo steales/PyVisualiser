@@ -1,3 +1,9 @@
+# PyVisualiser
+# Author: steales
+# Version: R1
+# License: MIT License
+# Date: 9th Jan 2025
+
 import sys
 import os
 import numpy as np
