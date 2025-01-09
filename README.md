@@ -41,3 +41,6 @@ python main.py
 
 ## License
 This project is licensed under the MIT License. Please check the `LICENSE` file for more information.
+
+## Images
+![alt text](https://imgur.com/a/ngHFh5z)
