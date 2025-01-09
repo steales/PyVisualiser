@@ -29,7 +29,7 @@ cd PyVisualiser
 ```
 2. Run the Python script
 ```bash
-python PyVisualiser.py
+python main.py
 ```
 3. Use the "Open" button to open a `.wav` file
 4. Press "Play" to begin playback
