@@ -1,5 +1,7 @@
 ### WARNING to all users who currently suffer from a migraine, epilepsy or other photosensitive conditions - this program produces fast flashing effects!
 
+<img src="https://i.ibb.co/mDCmYTt/IMG-0656.png" alt="IMG-0656" border="0">
+
 # PyVisualiser
 A simple python real-time audio visualiser build using PyQt5, NumPy and PyAudio
 
