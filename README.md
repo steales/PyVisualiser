@@ -40,7 +40,6 @@ python main.py
 
 ## Known Issues
 - Currently only supports `.wav` files. `.mp3` support can be added using additional libraries such as `pydub`
-- No current way to change playback volume
 - No current way to view timer / seek
 
 ## License
