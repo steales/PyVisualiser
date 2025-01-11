@@ -41,6 +41,7 @@ python main.py
 ## Known Issues
 - Currently only supports `.wav` files. `.mp3` support can be added using additional libraries such as `pydub`
 - No current way to view timer / seek
+- Volume slider only changes the volume of the window, instead of changing the volume of the audio data - so no visible change to the waveform occurs
 
 ## License
 This project is licensed under the MIT License. Please check the `LICENSE` file for more information.
