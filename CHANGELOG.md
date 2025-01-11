@@ -1,4 +1,5 @@
-All changes to PyVisualiser will be noted here.
+All changes to PyVisualiser will be noted here. </p>
+If you wish to view / use older versions of PyVisualiser, click [here.](https://gitlab.com/steales/PyVisArchive)
 #### Latest version: [1.1.1]
 
 ## [1.1.1] - 10th Jan 2025
