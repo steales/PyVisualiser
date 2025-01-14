@@ -1,6 +1,14 @@
 All changes to PyVisualiser will be noted here. </p>
 If you wish to view / use older versions of PyVisualiser, click [here.](https://gitlab.com/steales/PyVisArchive)
-#### Latest version: [1.1.1]
+#### Latest version: [1.2.0]
+
+## [1.2.0] - 14th Jan 2025
+### Added
+- White version of the logo now appears behind the visualiser
+- Button to change the shape of the drawn waveform (rectangle - circle)
+
+### Changed
+- Complete waveform rendering / drawing overhaul and recode
 
 ## [1.1.1] - 10th Jan 2025
 ### Added
