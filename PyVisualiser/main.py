@@ -1,8 +1,8 @@
 # PyVisualiser
 # Author: steales
-# Version: 1.1.1
+# Version: 1.2.0
 # License: MIT License
-# Date: 10th Jan 2025
+# Date: 14th Jan 2025
 
 import sys
 import os
@@ -11,37 +11,91 @@ import pyaudio
 import wave
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QTimer, Qt
-from PyQt5.QtGui import QPainter, QColor, QIcon
+from PyQt5.QtGui import QPainter, QColor, QIcon, QPixmap
+from scipy.ndimage import gaussian_filter1d
 
 class visualiserWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.audio_data = np.zeros(1024)
+        self.audio_data = None
         self.setMinimumSize(400, 300)
+        self.visualiser_shape = "rectangle"
+        self.smoothing_factor = 5
 
-    def update_audio_data(self, audio_data):
-        self.audio_data = audio_data
+        self.background_image = QPixmap("logo_white.PNG")
+        self.image_width = 200
+        self.image_height = 200
+        self.scaled_image = self.background_image.scaled(
+            self.image_width,
+            self.image_height,
+            Qt.KeepAspectRatio,
+            Qt.SmoothTransformation
+        )
+
+    def update_audio_data(self, data):
+        smoothed_data = gaussian_filter1d(data, sigma=self.smoothing_factor)
+        self.audio_data = smoothed_data
+        self.update()
+
+    def toggle_shape(self):
+        if self.visualiser_shape == "rectangle":
+            self.visualiser_shape = "circle"
+        else:
+            self.visualiser_shape = "rectangle"
         self.update()
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-        width = self.width()
-        height = self.height()
-        center_y = height // 2
 
-        painter.fillRect(0, 0, width, height, QColor("black"))
+        if self.scaled_image:
+            image_x = (self.width() - self.scaled_image.width()) // 2
+            image_y = (self.height() - self.scaled_image.height()) // 2
+            painter.drawPixmap(image_x, image_y, self.scaled_image)
 
-        num_points = len(self.audio_data)
-        x_step = width / num_points
+        if self.audio_data is None:
+            return
 
-        for i in range(num_points - 1):
-            x1 = int(i * x_step)
-            x2 = int((i + 1) * x_step)
-            y1 = int(center_y - self.audio_data[i] * center_y)
-            y2 = int(center_y - self.audio_data[i + 1] * center_y)
-            painter.setPen(QColor("green"))
-            painter.drawLine(x1, y1, x2, y2)
+        width, height = self.width(), self.height()
+        center_x, center_y = width // 2, height // 2
+        radius = min(width, height) // 3
+        radius *= 0.8
+
+        # Normalize the audio data
+        normalised_data = self.audio_data / np.max(np.abs(self.audio_data)) if np.max(np.abs(self.audio_data)) > 0 else self.audio_data
+
+        if self.visualiser_shape == "rectangle":
+            # Rectangle visualiser logic
+            num_bars = len(self.audio_data)
+            bar_width = width / num_bars
+            scaling_factor = height / 2
+
+            for i in range(num_bars):
+                x = int(i * bar_width)
+                current_bar_width = int(bar_width)
+                bar_height = int(normalised_data[i] * scaling_factor)
+                painter.drawRect(x, center_y - bar_height // 2, current_bar_width, bar_height)
+
+        elif self.visualiser_shape == "circle":
+            # Circle visualiser logic with symmetry
+            num_points = len(self.audio_data)
+            half_points = num_points // 2
+
+            # Draw the top half of the semi-circle
+            for i in range(half_points):
+                angle = np.pi * i / (half_points - 1)  # Top semi-circle: 0 to π
+                x = center_x + int(radius * (1 + normalised_data[i]) * np.cos(angle))
+                y = center_y - int(radius * (1 + normalised_data[i]) * np.sin(angle))  # Negative for top semi-circle
+                painter.drawLine(center_x, center_y, x, y)
+
+            # Draw the bottom half by mirroring the top
+            for i in range(half_points):
+                angle = np.pi * i / (half_points - 1)  # Bottom semi-circle: 0 to π
+                x = center_x + int(radius * (1 + normalised_data[i]) * np.cos(angle))
+                y = center_y + int(radius * (1 + normalised_data[i]) * np.sin(angle))  # Positive for bottom semi-circle
+                painter.drawLine(center_x, center_y, x, y)
+
+
 
 class MusicPlayer(QMainWindow):
     def __init__(self):
@@ -58,6 +112,9 @@ class MusicPlayer(QMainWindow):
         self.open_button = QPushButton("Open")
         self.open_button.clicked.connect(self.open_file)
 
+        self.toggle_shape_button = QPushButton("Toggle Shape")
+        self.toggle_shape_button.clicked.connect(self.visualiser.toggle_shape)
+
         self.volume_level = QLabel("Volume: 100")
         self.volume_level.setAlignment(Qt.AlignCenter)
         self.volume_level.setFixedHeight(30)
@@ -72,6 +129,7 @@ class MusicPlayer(QMainWindow):
         control_layout = QHBoxLayout()
         control_layout.addWidget(self.open_button)
         control_layout.addWidget(self.play_button)
+        control_layout.addWidget(self.toggle_shape_button)
 
         volume_layout = QVBoxLayout()
         volume_layout.addWidget(self.volume_level)
