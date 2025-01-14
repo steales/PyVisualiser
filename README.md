@@ -50,7 +50,7 @@ python main.py
 This project is licensed under the MIT License. Please check the `LICENSE` file for more information.
 
 ## Images
-<img src="https://i.ibb.co/HCc4tSs/image.png" alt="image" border="0" width="300"> <img src="https://i.ibb.co/ZLC76sW/main.png" alt="main" border="0" width="300"> <img src="https://i.ibb.co/VDG9qQ0/image.png" alt="image" border="0" width="300">
+<img src="https://i.ibb.co/HCc4tSs/image.png" alt="image" border="0" width="300"> <img src="https://i.ibb.co/ZLC76sW/main.png" alt="main" border="0" width="300"> <img src="https://i.ibb.co/VDG9qQ0/image.png" alt="image" border="0" width="300"> <img src="https://i.ibb.co/2ZRLc3r/image.png" alt="image" border="0" width="300"> <img src="https://i.ibb.co/8DQp9cR/image.png" alt="image" border="0" width="300"> <img src="https://i.ibb.co/12Nnm9X/image.png" alt="image" border="0" width="300">
 
 ### Additional Credits
 Thank you to Leebawk for creating the logo :]
