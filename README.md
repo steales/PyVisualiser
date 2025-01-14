@@ -11,6 +11,8 @@ A simple python real-time audio visualiser build using PyQt5, NumPy, SciPy and P
 - Simple GUI built using PyQt5
 - Playback options (play, pause)
 - Dynamic window title that displays the currently loaded file
+- Button to allow the waveform to be rendered in different ways
+- Live volume adjustment
 
 ## Requirements
 To run this project, please make sure you have the following installed:
