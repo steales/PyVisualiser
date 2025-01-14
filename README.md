@@ -20,6 +20,7 @@ To run this project, please make sure you have the following installed:
 - PyQt5
 - PyAudio
 - NumPy
+- SciPy
 
 You can install the required libraries using pip:
 ```bash
