@@ -3,7 +3,7 @@
 <center> <img src="https://i.ibb.co/mDCmYTt/IMG-0656.png" alt="IMG-0656" border="0"> </center>
 
 # PyVisualiser
-A simple python real-time audio visualiser build using PyQt5, NumPy and PyAudio
+A simple python real-time audio visualiser build using PyQt5, NumPy, SciPy and PyAudio
 
 ## Features
 - Play '.wav' audio files
@@ -21,7 +21,7 @@ To run this project, please make sure you have the following installed:
 
 You can install the required libraries using pip:
 ```bash
-pip install pyqt5 pyaudio numpy
+pip install pyqt5 pyaudio numpy scipy
 ```
 
 ## How to Use
